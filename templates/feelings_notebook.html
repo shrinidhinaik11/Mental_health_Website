@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Feelings Notebook | MindWell</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        body {
+            background: #f3f7f1;
+            color: #34483a;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .topbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e9df;
+            padding: 16px 0;
+        }
+
+        .brand {
+            color: #386641;
+            font-size: 1.35rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .page-wrapper {
+            max-width: 900px;
+            margin: 42px auto;
+            padding: 0 16px;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            color: #386641;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+        }
+
+        .welcome p {
+            color: #718174;
+            line-height: 1.7;
+        }
+
+        .notebook-card {
+            background: #fff;
+            border: 1px solid #e4ebe1;
+            border-radius: 20px;
+            padding: clamp(20px, 5vw, 36px);
+            box-shadow: 0 8px 30px rgba(48, 76, 51, 0.06);
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            color: #386641;
+            font-weight: 650;
+        }
+
+        .form-label {
+            color: #405b46;
+            font-weight: 600;
+        }
+
+        .form-control {
+            border: 1px solid #dce6d9;
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .form-control:focus {
+            border-color: #83a889;
+            box-shadow: 0 0 0 3px rgba(87, 133, 94, 0.12);
+        }
+
+        .lined-paper {
+            min-height: 220px;
+            line-height: 30px;
+            background-color: #fffef9;
+            background-image: repeating-linear-gradient(
+                to bottom,
+                transparent 0,
+                transparent 29px,
+                #e4ebdf 29px,
+                #e4ebdf 30px
+            );
+            resize: vertical;
+        }
+
+        .btn-save {
+            background: #386641;
+            border: 1px solid #386641;
+            color: white;
+            border-radius: 10px;
+            padding: 11px 24px;
+            font-weight: 600;
+        }
+
+        .btn-save:hover {
+            background: #2d5034;
+            color: white;
+        }
+
+        .entry-card {
+            background: white;
+            border: 1px solid #e3eade;
+            border-left: 4px solid #8eaf91;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 14px rgba(48, 76, 51, 0.04);
+        }
+
+        .entry-date {
+            color: #839184;
+            font-size: 0.83rem;
+        }
+
+        .entry-feelings {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            line-height: 1.8;
+            margin-top: 15px;
+            margin-bottom: 18px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 35px 15px;
+            color: #718174;
+            background: #fff;
+            border: 1px dashed #cbd9c8;
+            border-radius: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 12px;
+            color: #839184;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="topbar">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="/" class="brand">
+            <i class="bi bi-leaf"></i> MindWell
+        </a>
+
+        <a href="/" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-house"></i> Home
+        </a>
+    </div>
+</nav>
+
+<main class="page-wrapper">
+
+    <header class="welcome">
+        <h1><i class="bi bi-journal-heart"></i> My Feelings Notebook</h1>
+        <p class="mt-3">
+            A quiet space for your thoughts, feelings, and little moments.
+            <br>
+            Take your time. Your feelings deserve to be heard.
+        </p>
+    </header>
+
+    <section class="notebook-card">
+        <h4 class="section-title mb-2">
+            <i class="bi bi-pencil"></i> Today's Reflection
+        </h4>
+
+        <p class="text-muted mb-4">
+            Write freely. There is no right or wrong way to express yourself.
+        </p>
+
+        <form method="POST">
+
+            <div class="mb-4">
+                <label for="title" class="form-label">
+                    Entry title <span class="text-muted fw-normal">(optional)</span>
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       id="title"
+                       name="title"
+                       maxlength="150"
+                       placeholder="A little moment from today...">
+            </div>
+
+            <div class="mb-4">
+                <label for="feelings" class="form-label">
+                    What's on your mind?
+                </label>
+
+                <textarea class="form-control lined-paper"
+                          id="feelings"
+                          name="feelings"
+                          rows="7"
+                          placeholder="Today, I feel..."
+                          required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-save">
+                <i class="bi bi-bookmark-heart"></i> Save My Thoughts
+            </button>
+
+        </form>
+    </section>
+
+    <section>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="section-title mb-0">My Previous Entries</h3>
+            <span class="text-muted small">
+                <i class="bi bi-journal-text"></i> My reflections
+            </span>
+        </div>
+
+        {% if entries %}
+
+            {% for entry in entries %}
+
+                <article class="entry-card">
+
+                    <h5 class="section-title mb-2">
+                        <i class="bi bi-bookmark"></i>
+                        {{ entry[1] or "My Feelings" }}
+                    </h5>
+
+                    <div class="entry-date">
+                        <i class="bi bi-clock"></i> {{ entry[3] }}
+                    </div>
+
+                    <p class="entry-feelings">{{ entry[2] }}</p>
+
+                    <div class="d-flex flex-wrap gap-2">
+
+                        <a href="/edit-notebook/{{ entry[0] }}"
+                           class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+
+                        <form action="/delete-notebook/{{ entry[0] }}"
+                              method="POST"
+                              onsubmit="return confirm('Are you sure you want to delete this entry?');">
+
+                            <button type="submit"
+                                    class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+                <i class="bi bi-journal-heart fs-1"></i>
+                <h5 class="mt-3">Your notebook starts here</h5>
+                <p class="mb-0">
+                    Whenever you're ready, write your first reflection above.
+                </p>
+            </div>
+
+        {% endif %}
+    </section>
+
+</main>
+
+<footer>
+    MindWell · Take a breath. Take your time. Be kind to yourself.
+</footer>
+
+</body>
+</html>
+

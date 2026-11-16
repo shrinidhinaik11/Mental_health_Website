@@ -1,0 +1,211 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MindWell | Affirmations</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+
+        body {
+            background: #f4fbf7;
+        }
+
+        .main-card {
+            border-radius: 20px;
+        }
+
+        .section-icon {
+            font-size: 40px;
+        }
+
+        .affirmation-text {
+            font-size: 24px;
+            line-height: 1.6;
+        }
+
+        .meaning {
+            line-height: 1.7;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container py-5">
+
+
+    <!-- Heading -->
+
+    <div class="text-center mb-5">
+
+        <div class="section-icon">
+            💭
+        </div>
+
+        <h1 class="text-success mt-3">
+            Your Affirmation
+        </h1>
+
+        <p class="text-muted">
+            A positive reminder based on how you feel today.
+        </p>
+
+    </div>
+
+
+    <!-- Affirmation Card -->
+
+    <div class="card shadow main-card p-5 text-center">
+
+
+        <h3 class="text-success">
+            Today's Affirmation
+        </h3>
+
+
+        <!-- Affirmation -->
+
+        <p class="affirmation-text fw-bold mt-4">
+
+
+            {% if mood == "Happy" %}
+
+                I welcome happiness, peace, and gratitude into my heart.
+
+            {% elif mood == "Sad" %}
+
+                I am healing, I am growing, and brighter days are ahead.
+
+            {% elif mood == "Stressed" %}
+
+                I breathe in peace and let go of what I cannot control.
+
+            {% elif mood == "Neutral" %}
+
+                I am open to new possibilities and meaningful moments.
+
+            {% elif mood == "Calm" %}
+
+                I am peaceful, present, and grateful for this moment.
+
+            {% endif %}
+
+
+        </p>
+
+
+        <hr class="my-4">
+
+
+        <!-- Meaning -->
+
+        <h5 class="text-success">
+            What It Means
+        </h5>
+
+
+        <p class="mt-3 text-muted meaning">
+
+
+            {% if mood == "Happy" %}
+
+                Enjoy the happiness you're feeling and appreciate the
+                simple moments that make your day special.
+
+            {% elif mood == "Sad" %}
+
+                Give yourself time to heal. What you are feeling today
+                does not define your future.
+
+            {% elif mood == "Stressed" %}
+
+                Slow down and focus on what you can handle.
+                You don't have to solve everything at once.
+
+            {% elif mood == "Neutral" %}
+
+                An ordinary day can still hold something meaningful.
+                Stay open to new experiences and possibilities.
+
+            {% elif mood == "Calm" %}
+
+                Appreciate this peaceful moment and allow yourself
+                time to recharge and stay present.
+
+            {% endif %}
+
+
+        </p>
+
+
+        <!-- Mood indicator -->
+
+        <div class="mt-4">
+
+            {% if mood == "Happy" %}
+
+                <span class="badge bg-success-subtle text-success px-3 py-2">
+                    Happy
+                </span>
+
+            {% elif mood == "Sad" %}
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2">
+                    Sad
+                </span>
+
+            {% elif mood == "Stressed" %}
+
+                <span class="badge bg-warning-subtle text-warning-emphasis px-3 py-2">
+                    Stressed
+                </span>
+
+            {% elif mood == "Neutral" %}
+
+                <span class="badge bg-secondary-subtle text-secondary px-3 py-2">
+                    Neutral
+                </span>
+
+            {% elif mood == "Calm" %}
+
+                <span class="badge bg-info-subtle text-info-emphasis px-3 py-2">
+                    Calm
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+
+    <!-- Back -->
+
+    <div class="text-center mt-4">
+
+        <a href="/" class="btn btn-success px-4">
+            Back to Home
+        </a>
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

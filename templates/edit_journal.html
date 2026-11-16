@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MindWell | Edit Journal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <section class="journal-section">
+       <div class="container">
+           <h1 class="text-center text-primary fw-bold mb-5">
+                ✏️ Edit Journal
+            </h1>
+               <form method="POST">
+                  <div class="mb-3">
+                     <label class="form-label">Journal Title</label>
+                        <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                       value="{{ journal[2] }}"
+                        required>
+                          </div>
+                      <div class="mb-3">
+
+                    <label class="form-label">How was your day?</label>
+
+                    <textarea
+                        name="journal"
+                        class="form-control"
+                        rows="6"
+                        required>{{ journal[3] }}</textarea>
+
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Current Mood</label>
+                        <select
+                        name="mood"
+                        class="form-select">
+                        <option {% if journal[4] == "😊 Happy" %}selected{% endif %}>😊 Happy</option>
+                        <option {% if journal[4] == "😌 Calm" %}selected{% endif %}>😌 Calm</option>
+                        <option {% if journal[4] == "😐 Neutral" %}selected{% endif %}>😐 Neutral</option>
+                        <option {% if journal[4] == "😔 Sad" %}selected{% endif %}>😔 Sad</option>
+                        <option {% if journal[4]== "😣 Stressed" %}selected{% endif %}>😣 Stressed</option>
+                    </select>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Update Journal
+                </button>
+                   </form>
+                          </div>
+                             </section>
+                                      </body>
+                                         </html> 

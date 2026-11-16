@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest"
+      href="{{ url_for('static', filename='manifest.json') }}">
+
+<meta name="theme-color" content="#386641">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+    <title>MindWell</title>
+    <!-- Floating Chatbot -->
+
+<button id="chatbotButton" class="floating-chatbot" title="MindWell Chatbot">
+    <i class="bi bi-chat-dots-fill"></i>
+</button>
+<!-- Chatbot Window -->
+
+<div id="chatbotWindow" class="chatbot-window">
+
+    <div class="chatbot-header">
+        <span>🌿 MindWell</span>
+
+        <button id="closeChatbot" class="chatbot-close">
+            ×
+        </button>
+    </div>
+
+    <div id="chatMessages" class="chatbot-messages">
+
+    <div class="bot-message">
+        Hello! I'm your MindWell assistant. 💚
+        <br>
+        How are you feeling today?
+    </div>
+
+    <div class="quick-options">
+
+        <button onclick="quickMessage('I am happy')">
+            😊 I'm Happy
+        </button>
+
+        <button onclick="quickMessage('I am sad')">
+            😔 I'm Sad
+        </button>
+
+        <button onclick="quickMessage('I am stressed')">
+            😣 I'm Stressed
+        </button>
+
+        <button onclick="quickMessage('I cannot sleep')">
+            😴 Sleep Help
+        </button>
+
+        <button onclick="quickMessage('I need motivation')">
+            💚 Motivation
+        </button>
+
+    </div>
+
+</div>
+
+    <div class="chatbot-input-area">
+
+        <input
+            type="text"
+            id="chatInput"
+            placeholder="Type your message..."
+        >
+
+        <button id="sendMessage">
+            <i class="bi bi-send-fill"></i>
+        </button>
+
+    </div>
+
+</div>
+<script>
+
+const chatbotButton = document.getElementById("chatbotButton");
+const chatbotWindow = document.getElementById("chatbotWindow");
+const closeChatbot = document.getElementById("closeChatbot");
+
+const chatInput = document.getElementById("chatInput");
+const sendMessage = document.getElementById("sendMessage");
+const chatMessages = document.getElementById("chatMessages");
+
+
+// Open chatbot
+
+chatbotButton.addEventListener("click", function() {
+
+    {% if logged_in %}
+
+        chatbotWindow.style.display = "flex";
+
+    {% else %}
+
+        alert("Please log in first to use the MindWell chatbot.");
+
+        window.location.href = "/login";
+
+    {% endif %}
+
+});
+
+// Close chatbot
+
+closeChatbot.addEventListener("click", function() {
+    chatbotWindow.style.display = "none";
+});
+
+
+// Send message
+let breathingActive = false;
+
+
+
+function sendChatMessage() {
+
+    const message = chatInput.value.trim();
+
+    if (message === "") {
+        return;
+    }
+
+    // Stop the current breathing exercise
+    breathingActive = false;
+
+    // Remove the breathing circle from the screen
+    const breathingBox = chatMessages.querySelector(".breathing-box");
+
+    if (breathingBox) {
+        breathingBox.remove();
+    }
+
+    // Show the user's message
+    const userMessage = document.createElement("div");
+    userMessage.className = "user-message";
+    userMessage.innerText = message;
+
+    chatMessages.appendChild(userMessage);
+
+    chatInput.value = "";
+
+    // Generate the chatbot response
+    const response = getBotResponse(message);
+
+    // Display the response
+    setTimeout(function() {
+
+        const botMessage = document.createElement("div");
+        botMessage.className = "bot-message";
+        botMessage.innerText = response;
+
+        chatMessages.appendChild(botMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    }, 300);
+}
+
+function quickMessage(message) {
+    chatInput.value = message;
+    sendChatMessage();
+}
+
+// Make the function accessible to HTML onclick buttons
+window.quickMessage = quickMessage;
+window.startBreathing = startBreathing;
+window.continueTalking = continueTalking;
+window.suggestTrustedPerson = suggestTrustedPerson;
+
+
+
+// MindWell responses
+
+
+
+function getBotResponse(message) {
+    message = message.toLowerCase();
+
+    // User directly asks for a breathing exercise
+    if (
+        message.includes("breathing exercise") ||
+        message.includes("guide me to breathe") ||
+        message.includes("help me breathe") ||
+        message.includes("breathing")
+    ) {
+        startBreathing();
+        return "Of course. 🌿 Let's try a gentle breathing exercise together.";
+    }
+
+    // Feeling unsafe or possible self-harm
+    if (
+        message.includes("hurt myself") ||
+        message.includes("kill myself") ||
+        message.includes("end my life") ||
+        message.includes("want to die")
+    ) {
+        return "I'm really sorry you're experiencing so much pain. 💚 Please reach out to someone you trust who can stay with you. If you may act on these feelings or are in immediate danger, contact local emergency services now. In India, call 112 for emergency help. You deserve real support, and you don't have to face this alone.";
+    }
+
+    // Feeling not good enough or emotionally low
+    if (
+        message.includes("not good") ||
+        message.includes("not okay") ||
+        message.includes("not okay") ||
+        message.includes("worthless") ||
+        message.includes("useless") ||
+        message.includes("feeling low") ||
+        message.includes("bad about myself")
+    ) {
+        showSupportOptions();
+
+        return "I'm sorry things feel difficult right now. 💚 You don't have to handle everything at once. Would you like to take a few slow breaths, talk about what's bothering you, or contact someone you trust?";
+    }
+
+    // Exhaustion or feeling overwhelmed
+    if (
+        message.includes("exhausted") ||
+        message.includes("exhausting") ||
+        message.includes("burnt out") ||
+        message.includes("burned out") ||
+        message.includes("can't cope") ||
+        message.includes("too much to handle")
+    ) {
+        showSupportOptions();
+
+        return "It sounds like you're carrying a lot. 🌿 If you can, take a break and give yourself permission to rest. It may also help to call or message someone you trust and let them know how you're feeling. You don't have to manage everything alone.";
+    }
+
+    // Anxiety and worry
+    if (
+        message.includes("anxious") ||
+        message.includes("anxiety") ||
+        message.includes("worried") ||
+        message.includes("nervous") ||
+        message.includes("panic")
+    ) {
+        showSupportOptions();
+
+        return "That sounds uncomfortable. 💚 Let's slow things down. You could try a gentle breathing exercise or reach out to someone who helps you feel safe. What would feel most helpful right now?";
+    }
+
+    // Sadness and loneliness
+    if (
+        message.includes("sad") ||
+        message.includes("lonely") ||
+        message.includes("alone") ||
+        message.includes("heartbroken") ||
+        message.includes("nobody understands")
+    ) {
+        showSupportOptions();
+
+        return "I'm sorry you're feeling this way. 💚 Your feelings matter. Would you like to talk about what happened, try a calming exercise, or call someone you feel comfortable with?";
+    }
+
+    // Anger and frustration
+    if (
+        message.includes("angry") ||
+        message.includes("frustrated") ||
+        message.includes("annoyed")
+    ) {
+        return "It sounds like something has really upset you. 💚 If possible, take a little space and breathe slowly before reacting. You can tell me what happened, too.";
+    }
+
+    // Happiness
+    if (
+        message.includes("happy") ||
+        message.includes("excited") ||
+        message.includes("feeling great")
+    ) {
+        return "That's lovely to hear! 😊 Enjoy this moment. What made you feel happy today?";
+    }
+
+    // Sleep problems
+    if (
+        message.includes("can't sleep") ||
+        message.includes("cannot sleep") ||
+        message.includes("insomnia")
+    ) {
+        return "It can be frustrating when you can't sleep. 🌙 Try a quiet, comfortable environment and a few gentle breaths. If this happens often, consider speaking with a healthcare professional.";
+    }
+
+    // Motivation
+    if (
+        message.includes("motivation") ||
+        message.includes("give up") ||
+        message.includes("can't do it")
+    ) {
+        return "You don't need to solve everything today. 🌷 Choose one small step, and remember that asking someone for support is also a strength.";
+    }
+
+    // Default
+    return "I'm here to listen. 💚 Can you tell me a little more about what you're feeling? We can talk, try a breathing exercise, or think of someone you trust who could support you.";
+}
+
+
+// Show support choices
+function showSupportOptions() {
+    const options = document.createElement("div");
+    options.className = "quick-options";
+
+    options.innerHTML = `
+        <button onclick="startBreathing()">
+            🌬️ Try Breathing
+        </button>
+
+        <button onclick="continueTalking()">
+            💬 Talk to MindWell
+        </button>
+
+        <button onclick="suggestTrustedPerson()">
+            💚 Contact Someone
+        </button>
+    `;
+
+    chatMessages.appendChild(options);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+
+// Offer a suggestion to contact someone trusted
+function suggestTrustedPerson() {
+    const message = document.createElement("div");
+    message.className = "bot-message";
+
+    message.innerText =
+        "💚 Is there a friend, family member, or someone you trust whom you could call or message? You could simply say: 'I'm having a difficult time. Can we talk for a few minutes?'";
+
+    chatMessages.appendChild(message);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+
+function showBreathingOptions() {
+
+    setTimeout(function() {
+
+        const options = document.createElement("div");
+
+        options.className = "quick-options";
+
+        options.innerHTML = `
+            <button onclick="startBreathing()">
+                🌬️ Yes, let's do it
+            </button>
+
+            <button onclick="continueTalking()">
+                💬 Just talk to me
+            </button>
+        `;
+
+        chatMessages.appendChild(options);
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    }, 600);
+}
+
+
+function startBreathing() {
+
+    // Stop any previous breathing exercise
+    breathingActive = true;
+
+    const message = document.createElement("div");
+    message.className = "bot-message";
+    message.innerText =
+        "Let's take a moment together. 🌿 Get comfortable and follow the circle.";
+
+    chatMessages.appendChild(message);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    setTimeout(function() {
+
+        // Do not create the breathing circle if the user has stopped
+        if (!breathingActive) {
+            return;
+        }
+
+        const breathing = document.createElement("div");
+        breathing.className = "breathing-box";
+
+        breathing.innerHTML = `
+            <div id="breathingCircle">
+                Breathe In
+            </div>
+
+            <div id="breathingTimer">
+                30
+            </div>
+        `;
+
+        chatMessages.appendChild(breathing);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        startBreathingTimer();
+
+    }, 700);
+}
+
+
+function continueTalking() {
+
+    const message = document.createElement("div");
+
+    message.className = "bot-message";
+
+    message.innerText =
+        "Of course. 💚 I'm here to listen. Tell me what's on your mind.";
+
+    chatMessages.appendChild(message);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function startBreathingTimer() {
+
+    let time = 30;
+
+    const timer = document.getElementById("breathingTimer");
+    const circle = document.getElementById("breathingCircle");
+
+    let elapsed = 0;
+
+    function updateBreathing() {
+        if (!breathingActive) {
+    return;
+}
+
+        if (time <= 0) {
+            
+
+            circle.classList.remove("breathing-in");
+            circle.classList.remove("breathing-out");
+
+            circle.innerText = "Well Done 🌿";
+            timer.innerText = "✓";
+
+            const message = document.createElement("div");
+
+            message.className = "bot-message";
+
+            message.innerText =
+                "You did well. 💚 Take another slow breath and give yourself a moment to relax.";
+
+            chatMessages.appendChild(message);
+
+            chatMessages.scrollTop =
+                chatMessages.scrollHeight;
+
+            return;
+        }
+
+
+        // 0–4 seconds → Breathe In
+
+        if (elapsed < 4) {
+
+            circle.innerText = "Breathe In";
+
+            circle.classList.add("breathing-in");
+            circle.classList.remove("breathing-out");
+
+        }
+
+
+        // 4–6 seconds → Hold
+
+        else if (elapsed < 6) {
+
+            circle.innerText = "Hold";
+
+            circle.classList.remove("breathing-in");
+            circle.classList.remove("breathing-out");
+
+        }
+
+
+        // 6–12 seconds → Breathe Out
+
+        else if (elapsed < 12) {
+
+            circle.innerText = "Breathe Out";
+
+            circle.classList.remove("breathing-in");
+            circle.classList.add("breathing-out");
+
+        }
+
+
+        // Start next cycle
+
+        else {
+
+            elapsed = 0;
+
+            circle.innerText = "Breathe In";
+
+            circle.classList.remove("breathing-out");
+            circle.classList.add("breathing-in");
+
+        }
+
+
+        timer.innerText = time;
+
+        elapsed++;
+        time--;
+
+        setTimeout(updateBreathing, 1000);
+    }
+
+
+    updateBreathing();
+}
+
+sendMessage.addEventListener("click", sendChatMessage);
+
+chatInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        sendChatMessage();
+    }
+});
+
+
+</script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navbar Starts -->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-bold text-success" href="#">
+                🌿 MindWell
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/services">Services</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                    {% if username %}
+
+<li class="nav-item">
+    <span class="nav-link text-success fw-bold">
+        👋 {{ username }}
+    </span>
+</li>
+
+<li class="nav-item">
+    <a class="btn btn-outline-danger ms-2" href="/logout">
+        Logout
+    </a>
+</li>
+
+{% else %}
+
+<li class="nav-item">
+    <a class="btn btn-outline-success ms-3" href="/register">
+        Register
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="btn btn-success ms-2" href="/login">
+        Login
+    </a>
+</li>
+
+{% endif %}
+
+
+</ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- Navbar Ends -->
+
+
+    <!-- Hero Section Starts -->
+
+    <section class="hero">
+
+    <div class="container">
+
+        <div class="row align-items-start hero-content">
+
+            <div class="col-md-6">
+                
+                {% if username %}
+    <h4 class="text-success">
+        Welcome, {{ username }}! 👋
+    </h4>
+{% endif %}
+
+                    <h1 class="display-4 fw-bold">
+    Every Feeling Matters. 🌿
+</h1>
+<h3 class="mt-3">
+    How are you feeling today?
+</h3>
+                   <p class="lead mt-4">
+    Track your mood, write your journal,
+    read daily mantras, discover wellness tips,
+    and take the first step towards a happier mind.
+</p>
+                  
+{% if username %}
+    <a href="/services" class="btn btn-success btn-lg mt-3">
+        Explore Services
+    </a>
+{% else %}
+    <a href="/register" class="btn btn-success btn-lg mt-3">
+        Get Started
+    </a>
+{% endif %}
+
+<a href="/about" class="btn btn-outline-success btn-lg mt-3 ms-2">
+    Learn More
+</a>
+
+
+
+                </div>
+
+                <div class="col-md-6 text-center">
+
+                    <img src="{{ url_for('static', filename='images/meditation.jpg') }}"
+     class="img-fluid rounded shadow"
+     alt="Meditation Illustration">
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Hero Ends -->
+     <!-- Emotion Section Starts -->
+
+<section class="emotion-section">
+
+    <div class="container">
+
+        <h2>How are you feeling today?</h2>
+
+        <div class="mood-container">
+           
+
+
+            <a href="/mood-analysis/Happy" class="mood-btn">
+    😊 Happy
+</a>
+
+
+<a href="/mood-analysis/Calm" class="mood-btn">
+    😌 Calm
+</a>
+
+<a href="/mood-analysis/Neutral" class="mood-btn">
+    😐 Neutral
+</a>
+
+<a href="/mood-analysis/Sad" class="mood-btn">
+    😔 Sad
+</a>
+
+<a href="/mood-analysis/Stressed" class="mood-btn">
+    😣 Stressed
+</a>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="quote-section">
+
+    <div class="container text-center">
+
+        <h2>💚 Quote of the Day</h2>
+
+        <blockquote>
+            "Your mental health is just as important as your physical health."
+        </blockquote>
+
+        <p>- MindWell</p>
+
+    </div>
+
+</section>
+
+<!-- Quote of the Day Ends -->
+     <!-- Free Services -->
+
+<section class="py-5">
+
+<div class="container">
+
+<h2 class="text-center text-success fw-bold mb-5">
+Free Wellness Services
+</h2>
+
+<div class="row">
+
+<div class="col-md-3 mb-4">
+
+<a href="/journal" class="text-decoration-none text-dark">
+
+    <div class="card shadow h-100 text-center p-4 service-card">
+
+        <i class="bi bi-journal-text display-4 text-success"></i>
+
+        <h4 class="mt-3">Journal</h4>
+
+        <p>
+            Write your daily thoughts and emotions in a secure digital journal.
+        </p>
+
+    </div>
+
+</a>
+</div>
+
+
+
+<div class="col-md-3 mb-4">
+
+    <a href="/mood-tracker"
+       class="text-decoration-none text-dark">
+
+        <div class="card shadow h-100 text-center p-4 service-card">
+
+            <i class="bi bi-emoji-smile display-4 text-success"></i>
+
+            <h4 class="mt-3">
+                Mood Tracker
+            </h4>
+
+            <p>
+                Track your mood every day and understand emotional patterns.
+            </p>
+
+        </div>
+
+    </a>
+
+</div>
+
+
+<div class="col-md-3 mb-4">
+
+    <a href="/daily-tips" class="text-decoration-none text-dark">
+
+        <div class="card shadow h-100 text-center p-4 service-card">
+
+            <i class="bi bi-lightbulb display-4 text-success"></i>
+
+            <h4 class="mt-3">Daily Tips</h4>
+
+            <p>
+                Practical tips for a healthier mind and a better day.
+            </p>
+
+        </div>
+
+    </a>
+
+</div>
+
+<div class="col-md-3 mb-4">
+    <a href="/affirmations" class="text-decoration-none text-dark">
+
+<div class="card shadow h-100 text-center p-4 service-card">
+
+<i class="bi bi-flower1 display-4 text-success"></i>
+
+<h4 class="mt-3">Affirmations</h4>
+
+<p>
+Start each day with positive affirmations and motivation.
+</p>
+
+</div>
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<section class="container my-5">
+    <div class="card border-0 shadow-sm p-4 text-center"
+         style="background-color: #f4f8f4; border-radius: 16px;">
+
+        <h3 style="color: #386641;">
+            My Feelings Notebook
+        </h3>
+
+        <p class="text-muted mt-2">
+            A personal space to write your feelings, express your thoughts,
+            and reflect on your day.
+        </p>
+
+        <div>
+            <a href="/feelings-notebook"
+               class="btn btn-success mt-2">
+                Open My Notebook
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+    <!-- Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function() {
+
+        navigator.serviceWorker.register(
+            "/static/service-worker.js"
+        )
+        .then(function() {
+            console.log("MindWell service worker registered!");
+        })
+        .catch(function(error) {
+            console.log("Service worker error:", error);
+        });
+
+    });
+
+}
+</script>
+
+</body>
+
+</html>

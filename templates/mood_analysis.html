@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MindWell | Mood Analysis</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container py-5">
+
+        <h1 class="text-center text-success fw-bold">
+            📊 My Mood Analysis
+        </h1>
+
+        <div class="mt-5">
+
+    <div class="mt-5">
+
+    {% for mood, count, percentage in mood_data %}
+
+<div class="mb-4">
+
+    <div class="d-flex justify-content-between">
+        <h5>{{ mood }}</h5>
+        <strong>{{ count }}</strong>
+    </div>
+
+    <div class="progress" style="height: 25px;">
+
+        <div 
+            class="progress-bar bg-success"
+            role="progressbar"
+            style="width: {{ percentage }}%;">
+
+            {{ count }}
+
+        </div>
+
+    </div>
+
+
+    <!-- Make a Wish only for Happy -->
+
+    {% if mood == "Happy" %}
+
+    <div class="text-center mt-3">
+
+        <button id="wishButton"
+                class="btn btn-success px-4">
+
+            Make a Wish
+
+        </button>
+
+    </div>
+
+
+    <div id="wishArea" class="text-center mt-4">
+
+        <div id="countdown" class="wish-count"></div>
+
+        <div id="wishWord" class="wish-word"></div>
+
+        <div id="wishFinal" class="wish-final"></div>
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+{% endfor %}
+</div>
+
+</div>
+
+    </div>
+    <script>
+
+    document.querySelectorAll(".mood-bar").forEach(function(bar) {
+
+        let width = bar.getAttribute("data-width");
+
+        bar.style.width = width + "%";
+
+    });
+
+</script>
+<script>
+
+const wishButton = document.getElementById("wishButton");
+
+if (wishButton) {
+
+    const countdown =
+        document.getElementById("countdown");
+
+    const wishWord =
+        document.getElementById("wishWord");
+
+    const wishFinal =
+        document.getElementById("wishFinal");
+
+
+    wishButton.addEventListener("click", function() {
+
+        wishButton.disabled = true;
+
+        wishButton.innerHTML = "Making your wish...";
+
+
+        // 3
+
+        countdown.innerHTML = "3";
+
+        countdown.classList.add("wish-fade");
+
+
+        // 2
+
+        setTimeout(function() {
+
+            countdown.innerHTML = "2";
+
+            countdown.classList.remove("wish-fade");
+
+            void countdown.offsetWidth;
+
+            countdown.classList.add("wish-fade");
+
+        }, 1000);
+
+
+        // 1
+
+        setTimeout(function() {
+
+            countdown.innerHTML = "1";
+
+            countdown.classList.remove("wish-fade");
+
+            void countdown.offsetWidth;
+
+            countdown.classList.add("wish-fade");
+
+        }, 2000);
+
+
+        // Start words
+
+        setTimeout(function() {
+
+            countdown.innerHTML = "";
+
+            showWords();
+
+        }, 3000);
+
+
+        function showWords() {
+
+            const words = [
+
+                "Happiness",
+
+                "Joy",
+
+                "Peace",
+
+                "Love",
+
+                "Hope",
+
+                "Gratitude"
+
+            ];
+
+
+            let index = 0;
+
+
+            function nextWord() {
+
+                if (index < words.length) {
+
+                    wishWord.innerHTML =
+                        words[index];
+
+                    wishWord.classList.remove("wish-fade");
+
+                    void wishWord.offsetWidth;
+
+                    wishWord.classList.add("wish-fade");
+
+                    index++;
+
+                    setTimeout(nextWord, 1000);
+
+                }
+
+                else {
+
+                    wishWord.innerHTML = "";
+
+                    wishFinal.innerHTML =
+                        "May your life be filled with happiness. ❤️";
+
+                    wishFinal.classList.add("wish-fade");
+
+                    wishButton.innerHTML = "Wish Made";
+
+                }
+
+            }
+
+
+            nextWord();
+
+        }
+
+    });
+
+}
+
+</script>
+
+</body>
+
+</html>
